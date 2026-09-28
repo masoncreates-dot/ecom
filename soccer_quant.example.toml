@@ -1,0 +1,46 @@
+# Copy to soccer_quant.toml and edit. Every key is optional.
+
+[api]
+# Prefer the API_FOOTBALL_KEY environment variable over putting the key here.
+# api_football_key = "..."
+rapidapi = false          # true if your key comes from RapidAPI
+daily_budget = 100        # free plan: 100 requests/day; Pro: 7500
+
+[general]
+history_seasons = 4       # seasons of football-data.co.uk history to load
+horizon_days = 10         # how far ahead to predict
+
+[paths]
+data_dir = "data"
+reports_dir = "reports"
+
+[model]
+time_decay_xi = 0.0019    # per day; ~1 year half-life
+elo_weight = 0.25
+sot_weight = 0.3          # shots-on-target proxy blended into goals (EPL history)
+xg_weight = 0.5           # xG blended into goals when API-Football has it
+market_weight = 0.5       # 0 = pure model, 1 = pure market
+coach_pre_weight = 0.65   # weight of matches played under the previous coach
+player_att_k = 0.12
+player_def_k = 0.10
+altitude_home_coef = 0.05 # Liga MX: per km of altitude advantage beyond 0.5 km
+travel_coef = 0.02
+
+[trading]
+bankroll = 1000.0
+kelly_fraction = 0.25
+min_ev = 0.03
+max_ev = 0.25
+min_prob = 0.08
+max_odds = 8.0
+max_stake_pct = 0.02
+max_match_exposure_pct = 0.03
+max_daily_exposure_pct = 0.15
+commission = 0.0          # e.g. 0.02 for an exchange
+devig_method = "shin"     # shin | power | proportional
+sharp_bookmakers = ["pinnacle"]
+markets = ["1x2", "ou", "btts", "ah"]
+
+[aliases]
+# Map any unrecognised spelling to a canonical team key, e.g.
+# "Club Universidad Nacional" = "pumas"
