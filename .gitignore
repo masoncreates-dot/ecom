@@ -6,7 +6,7 @@ __pycache__/
 venv/
 
 # Local data, caches, reports and secrets
-data/
-reports/
+/data/
+/reports/
 soccer_quant.toml
 .env
