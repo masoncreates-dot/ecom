@@ -54,7 +54,7 @@ def parse_csv(text: str, league: League, resolver: TeamResolver, season: str | N
     """Return (match rows, odds rows) with provisional match ids (see ``load``).
 
     ``scheduled``: the file lists upcoming fixtures (no scores yet)."""
-    df = pd.read_csv(io.StringIO(text.lstrip("\ufeff")), dtype=str, on_bad_lines="skip")
+    df = pd.read_csv(io.StringIO(text.lstrip("\ufeff").removeprefix("\u00ef\u00bb\u00bf")), dtype=str, on_bad_lines="skip")
     df.columns = [c.strip() for c in df.columns]
     if scheduled and "Div" in df:
         df = df[df["Div"].str.strip() == league.football_data_code]

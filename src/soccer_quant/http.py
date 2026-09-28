@@ -111,7 +111,7 @@ class HttpClient:
                 if resp.status_code == 429 or resp.status_code >= 500:
                     raise requests.HTTPError(f"{resp.status_code} from {url}", response=resp)
                 resp.raise_for_status()
-                return resp.json() if as_json else resp.text
+                return resp.json() if as_json else _decode(resp.content)
             except (requests.ConnectionError, requests.Timeout, requests.HTTPError) as exc:
                 status = getattr(getattr(exc, "response", None), "status_code", None)
                 if status is not None and 400 <= status < 500 and status != 429:
@@ -122,3 +122,11 @@ class HttpClient:
                     log.info("retrying %s in %.0fs (%s)", url, wait, exc)
                     time.sleep(wait)
         raise last_error  # type: ignore[misc]
+
+
+def _decode(content: bytes) -> str:
+    """CSV feeds often omit the charset; honour a UTF-8 BOM and fall back to Latin-1."""
+    try:
+        return content.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        return content.decode("latin-1")

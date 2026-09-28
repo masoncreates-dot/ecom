@@ -172,3 +172,9 @@ def test_fixtures_file_gives_scheduled_matches_for_one_league():
     matches, odds = football_data.parse_csv(text, LEAGUES["epl"], TeamResolver(), "2026", scheduled=True)
     assert [(m["home_key"], m["status"], m["home_goals"]) for m in matches] == [("arsenal", "NS", None)]
     assert {(o["selection"], o["price"]) for o in odds} == {("home", 2.4), ("draw", 3.5), ("away", 2.9)}
+
+
+def test_fixtures_file_with_mis_decoded_bom_is_still_filtered():
+    text = "ï»¿Div,Date,Time,HomeTeam,AwayTeam\nSP2,04/10/2026,15:00,Eibar,Leganes\n"
+    matches, _ = football_data.parse_csv(text, LEAGUES["epl"], TeamResolver(), "2026", scheduled=True)
+    assert matches == []
